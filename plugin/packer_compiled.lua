@@ -115,6 +115,11 @@ _G.packer_plugins = {
     path = "C:\\Users\\mathe\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\cmp_luasnip",
     url = "https://github.com/saadparwaiz1/cmp_luasnip"
   },
+  ["conform.nvim"] = {
+    loaded = true,
+    path = "C:\\Users\\mathe\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\conform.nvim",
+    url = "https://github.com/stevearc/conform.nvim"
+  },
   ["copilot.vim"] = {
     loaded = true,
     path = "C:\\Users\\mathe\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\copilot.vim",
@@ -226,11 +231,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "C:\\Users\\mathe\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
-  },
-  ["prettier.nvim"] = {
-    loaded = true,
-    path = "C:\\Users\\mathe\\AppData\\Local\\nvim-data\\site\\pack\\packer\\start\\prettier.nvim",
-    url = "https://github.com/MunifTanjim/prettier.nvim"
   },
   ["promise-async"] = {
     loaded = true,

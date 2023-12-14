@@ -8,7 +8,8 @@ return require('packer').startup(function(use)
             require('Comment').setup()
         end
     }
-    use 'MunifTanjim/prettier.nvim'
+
+    use 'stevearc/conform.nvim'
 
     use 'wbthomason/packer.nvim'
     -- use 'mg979/vim-visual-multi'

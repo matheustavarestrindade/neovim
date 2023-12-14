@@ -13,6 +13,10 @@ require('mason-lspconfig').setup({
         end,
         ['tsserver'] = function()
             lsp_config.tsserver.setup({
+                on_attach = function(client)
+                    client.server_capabilities.documentFormattingProvider = false
+                    client.server_capabilities.documentFormattingRangeProvider = false
+                end,
                 settings = {
                     completions = {
                         completeFunctionCalls = true,
@@ -50,6 +54,62 @@ require('mason-lspconfig').setup({
                 },
                 capabilities = capabilities,
             })
+        end,
+        ['jsonls'] = function()
+            lsp_config.jsonls.setup({
+                settings = {
+                    json = {
+                        -- Schemas https://www.schemastore.org
+                        schemas = {
+                            {
+                                fileMatch = { "package.json" },
+                                url = "https://json.schemastore.org/package.json",
+                            },
+                            {
+                                fileMatch = { "tsconfig*.json" },
+                                url = "https://json.schemastore.org/tsconfig.json",
+                            },
+                            {
+                                fileMatch = {
+                                    ".prettierrc",
+                                    ".prettierrc.json",
+                                    "prettier.config.json",
+                                },
+                                url = "https://json.schemastore.org/prettierrc.json",
+                            },
+                            {
+                                fileMatch = { ".eslintrc", ".eslintrc.json" },
+                                url = "https://json.schemastore.org/eslintrc.json",
+                            },
+                            {
+                                fileMatch = {
+                                    ".babelrc",
+                                    ".babelrc.json",
+                                    "babel.config.json",
+                                },
+                                url = "https://json.schemastore.org/babelrc.json",
+                            },
+                            {
+                                fileMatch = { "lerna.json" },
+                                url = "https://json.schemastore.org/lerna.json",
+                            },
+                            {
+                                fileMatch = { "now.json", "vercel.json" },
+                                url = "https://json.schemastore.org/now.json",
+                            },
+                            {
+                                fileMatch = {
+                                    ".stylelintrc",
+                                    ".stylelintrc.json",
+                                    "stylelint.config.json",
+                                },
+                                url = "http://json.schemastore.org/stylelintrc.json",
+                            },
+                        },
+                    },
+                },
+                capabilities = capabilities,
+            })
         end
     }
 })
@@ -75,8 +135,6 @@ cmp.setup({
     }),
 })
 
-
-
 lsp.on_attach(function(client, bufnr)
     local opts = { buffer = bufnr, remap = false }
 
@@ -93,23 +151,6 @@ lsp.on_attach(function(client, bufnr)
     lsp.default_keymaps({ buffer = bufnr })
 end)
 
--- lsp.format_on_save({
--- 	format_opts = {
--- 		async = true,
--- 		timeout_ms = 10000,
--- 		formatting_options = {
--- 			['tabSize'] = 4,
--- 			['insertSpaces'] = false,
--- 		}
--- 	},
--- 	servers = {
--- 		['tsserver'] = { 'javascript', 'typescript', 'typescriptreact', 'ts', 'jsx', 'tsx', 'js' },
--- 		['svelte']   = { 'svelte' },
--- 		['lua_ls']   = { 'lua' },
--- 		['prismals'] = { 'prisma' },
--- 	}
--- });
-
 lsp.set_sign_icons({
     error = '',
     warn = '',
@@ -118,3 +159,4 @@ lsp.set_sign_icons({
 })
 
 lsp.setup()
+
