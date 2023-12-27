@@ -2,6 +2,8 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'f-person/git-blame.nvim'
 
+    use 'onsails/lspkind.nvim'
+    use 'windwp/nvim-ts-autotag'
     use {
         'numToStr/Comment.nvim',
         config = function()
