@@ -66,6 +66,8 @@ require("telescope").setup({
                     '!.min.js',
                     '-glob',
                     '!dist/*',
+                    -- Make search case insensitive
+                    '-i',
                 }
             end
         },
@@ -85,6 +87,8 @@ require("telescope").setup({
                     '!.min.js',
                     '--glob',
                     '!dist/*',
+                    -- Make search case insensitive
+                    '-i',
                 }
             end
         },

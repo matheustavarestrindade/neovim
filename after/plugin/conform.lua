@@ -10,11 +10,11 @@ require('conform').setup({
         scss = { "prettier" },
         markdown = { "prettier" },
     }
+
 })
 
 vim.keymap.set("n", "<leader>f", "<cmd>Format<cr>")
 vim.keymap.set("n", "<leader><leader>", "<cmd>Format<cr>");
-
 
 vim.api.nvim_create_user_command("Format", function(args)
     local range = nil
