@@ -3,6 +3,11 @@ local lsp_config = require("lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lspkind = require('lspkind')
 
+
+require('luasnip.loaders.from_vscode').lazy_load({
+    paths = './snippets/'
+})
+
 require('mason').setup({})
 require('mason-lspconfig').setup({
     ensure_installed = { 'tsserver', 'svelte' },
@@ -117,12 +122,14 @@ require('mason-lspconfig').setup({
 
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
+local cmp_action = require('lsp-zero').cmp_action()
 
 cmp.setup({
     sources = {
         { name = 'path' },
         { name = 'nvim_lsp' },
         { name = 'nvim_lua' },
+        { name = 'luasnip' }
     },
     formatting = {
         format = lspkind.cmp_format({
@@ -147,6 +154,8 @@ cmp.setup({
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
         -- ['<Tab>'] = cmp.mapping.confirm({ select = true }),
         ['<C-Space>'] = cmp.mapping.complete(),
+        ['<C-f>'] = cmp_action.luasnip_jump_forward(),
+        ['<C-b>'] = cmp_action.luasnip_jump_backward(),
     }),
 })
 

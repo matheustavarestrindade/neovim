@@ -1,0 +1,22 @@
+{
+    "Export default class": {
+        "prefix": "edc",
+        "body": ["", "class $TM_FILENAME_BASE {", "\tconstructor() {", "\t", "\t}", "}", "", "export default $TM_FILENAME_BASE;"],
+        "description": "Create a default exporting class"
+    },
+    "Express Server Routes": {
+        "prefix": "crouter",
+        "body": [
+            "import { Router, Request, Response } from 'express';",
+            "",
+            "",
+            "const router = Router();",
+            "",
+            "router.post('/', async (req: Request, res: Response) => {});",
+            "",
+            "export default router",
+            ""
+        ],
+        "description": "Create routes express"
+    }
+}

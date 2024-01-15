@@ -2,6 +2,9 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'f-person/git-blame.nvim'
 
+
+    use 'mg979/vim-visual-multi'
+
     use 'onsails/lspkind.nvim'
     use 'windwp/nvim-ts-autotag'
     use {
