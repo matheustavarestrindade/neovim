@@ -24,11 +24,11 @@ return {
 
             -- Autocompletion
             { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-nvim-lsp' },
             { 'hrsh7th/cmp-buffer' },
             { 'hrsh7th/cmp-path' },
-            { 'saadparwaiz1/cmp_luasnip' },
-            { 'hrsh7th/cmp-nvim-lsp' },
             { 'hrsh7th/cmp-nvim-lua' },
+            { 'saadparwaiz1/cmp_luasnip' },
 
             -- Snippets
             { 'L3MON4D3/LuaSnip' },
@@ -64,6 +64,30 @@ return {
                                 completions = {
                                     completeFunctionCalls = true,
                                 },
+                                javascript = {
+                                    inlayHints = {
+                                        includeInlayEnumMemberValueHints = true,
+                                        includeInlayFunctionLikeReturnTypeHints = true,
+                                        includeInlayFunctionParameterTypeHints = true,
+                                        includeInlayParameterNameHints = 'all',
+                                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                                        includeInlayPropertyDeclarationTypeHints = true,
+                                        includeInlayVariableTypeHints = true,
+                                        includeInlayVariableTypeHintsWhenTypeMatchesName = true
+                                    }
+                                },
+                                typescript = {
+                                    inlayHints = {
+                                        includeInlayEnumMemberValueHints = true,
+                                        includeInlayFunctionLikeReturnTypeHints = true,
+                                        includeInlayFunctionParameterTypeHints = true,
+                                        includeInlayParameterNameHints = 'all',
+                                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                                        includeInlayPropertyDeclarationTypeHints = true,
+                                        includeInlayVariableTypeHints = true,
+                                        includeInlayVariableTypeHintsWhenTypeMatchesName = true
+                                    }
+                                }
                             },
                             capabilities = capabilities,
                         })
@@ -163,8 +187,8 @@ return {
 
             cmp.setup({
                 sources = {
-                    { name = 'luasnip' },
                     { name = 'nvim_lsp' },
+                    { name = 'luasnip' },
                 },
                 formatting = {
                     format = lspkind.cmp_format({
@@ -242,3 +266,4 @@ return {
         end
     }
 }
+
