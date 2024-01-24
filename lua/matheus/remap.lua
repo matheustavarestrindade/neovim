@@ -41,7 +41,7 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
 
 vim.keymap.set("n", "<C-y>", "<cmd>Telescope neoclip<CR>");
-vim.keymap.set("n", "<C-s>", "<cmd>w<CR>");
+-- vim.keymap.set("n", "<C-s>", "<cmd>w<CR>");
 -- Move line up and Down
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==") -- move line up(n)
 vim.keymap.set("n", "<A-k>", ":m .-2<CR>==") -- move line down(n)

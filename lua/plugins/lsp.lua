@@ -54,6 +54,21 @@ return {
                         local lua_opts = lsp.nvim_lua_ls()
                         lsp_config.lua_ls.setup(lua_opts)
                     end,
+                    ['gopls'] = function() 
+                       lsp_config.gopls.setup({
+                            settings = {
+                                gopls = {
+                                    completeUnimported = true,
+                                    usePlaceholders = true,
+                                    analyses = {
+                                        unusedparams = true,
+                                    },
+                                    staticcheck = true,
+                                },
+                            },
+                            capabilities = capabilities,
+                        })
+                    end,
                     ['tsserver'] = function()
                         lsp_config.tsserver.setup({
                             on_attach = function(client)
@@ -212,6 +227,7 @@ return {
                     ['<C-k>'] = cmp.mapping.scroll_docs(4),
                     ['<CR>'] = cmp.mapping.confirm({ select = true }),
                     -- ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+                    ['<C-s>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
                     ['<C-Space>'] = cmp.mapping.complete(),
                     ['<C-f>'] = cmp_action.luasnip_jump_forward(),
                     ['<C-b>'] = cmp_action.luasnip_jump_backward(),
