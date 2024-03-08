@@ -18,5 +18,15 @@
             ""
         ],
         "description": "Create routes express"
-    }
+    },
+    "Svente Typescript Component": {
+        "prefix": "stsc"
+        "body": [
+            "<script lang='ts'>",
+            "",
+            "</script>",
+        ],
+        "description": "Create a Svente component"
+    },
+
 }
