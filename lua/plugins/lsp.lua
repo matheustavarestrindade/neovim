@@ -47,7 +47,7 @@ return {
 
             require('mason').setup({})
             require('mason-lspconfig').setup({
-                ensure_installed = { 'tsserver', 'svelte' },
+                ensure_installed = { 'tsserver', 'svelte', 'gopls', 'lua_ls', 'prismals', 'jsonls' },
                 handlers = {
                     lsp.default_setup,
                     lua_ls = function()
