@@ -9,14 +9,14 @@
         "language": [
           "typescript",
           "typescriptreact"
-          
         ],
         "path": "./typescript.json"
       },
       {
         "language": [
-          "svelte",
+          "svelte"
         ],
+        "scope": "svelte",
         "path": "./svelte.json"
       }
     ]
