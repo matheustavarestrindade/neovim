@@ -1,0 +1,11 @@
+{
+    "Svente Typescript Component": {
+        "prefix": "stsc"
+        "body": [
+            "<script lang='ts'>",
+            "",
+            "</script>",
+        ],
+        "description": "Create a Svelte component"
+    },
+}
