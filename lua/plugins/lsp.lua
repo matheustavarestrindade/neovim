@@ -54,8 +54,8 @@ return {
                         local lua_opts = lsp.nvim_lua_ls()
                         lsp_config.lua_ls.setup(lua_opts)
                     end,
-                    ['gopls'] = function() 
-                       lsp_config.gopls.setup({
+                    ['gopls'] = function()
+                        lsp_config.gopls.setup({
                             settings = {
                                 gopls = {
                                     completeUnimported = true,
@@ -118,8 +118,12 @@ return {
                                                     printWidth = 160,
                                                     svelteBracketNewLine = false,
                                                 }
+                                            },
+                                            compilerWarnings = {
+                                                ["a11y-click-events-have-key-events"] = "ignore",
+                                                ["a11y-no-static-element-interactions"] = "ignore"
                                             }
-                                        }
+                                        },
                                     }
                                 }
 
