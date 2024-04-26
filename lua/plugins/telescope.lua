@@ -53,7 +53,7 @@ return {
                         '.min.js',
                         '-E',
                         'dist/*',
-                    }
+                    },
                 },
                 live_grep = {
                     additional_args = function()
@@ -97,6 +97,9 @@ return {
                         }
                     end
                 },
+                colorscheme = {
+                    enable_preview = true
+                }
             },
         })
     end

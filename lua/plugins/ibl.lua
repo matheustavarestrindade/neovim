@@ -3,7 +3,9 @@ return {
     main = "ibl",
     opts = {},
     config = function()
-        function mix_colors(a, b, mult)
+        local enabled = true
+
+        local function mix_colors(a, b, mult)
             return {
                 a[1] * mult + b[1] * (1 - mult),
                 a[2] * mult + b[1] * (1 - mult),
@@ -11,19 +13,19 @@ return {
             }
         end
 
-        function decompose_color(color)
+        local function decompose_color(color)
             local blue = color % 256
             local green = (color - blue) / 256 % 256
             local red = (color - green * 256 - blue) / 256 / 256
             return { red, green, blue }
         end
 
-        function compose_color(color)
+        local function compose_color(color)
             return math.floor(math.floor(color[3]) + math.floor(color[2]) * 256 + math.floor(color[1]) * 256 * 256)
         end
 
         -- Generates a list of highlight groups based on the base highlight, but with some colors mixed in
-        function make_hl_groups(opts)
+        local function make_hl_groups(opts)
             local color_transparency = opts.color_transparency or 0.07
             local rainbow_colors = opts.colors or { 0xffff40, 0x79ff79, 0xff79ff, 0x4fecec }
             local base_hl = opts.hl
@@ -40,7 +42,7 @@ return {
             return color_groups
         end
 
-        function fill_missing_hl_parts(hl, base)
+        local function fill_missing_hl_parts(hl, base)
             if hl.bg == nil then
                 hl.bg = base.bg
             end
@@ -85,21 +87,39 @@ return {
             return blank_opts
         end
 
-        hl_group = make_opts({}, { color_transparency = 0.18, context_transparency = 0.55 })
-        require("ibl").setup({
-            indent = {
-                highlight = hl_group.char_highlight_list
-            },
-            whitespace = {
-                highlight = hl_group.space_char_highlight_list,
-                remove_blankline_trail = false
-            },
-            scope = {
-                char = "",
-                highlight = hl_group.context_highlight_list,
-                enabled = true,
-            }
-        })
+        if enabled then
+            -- local hl_group = make_opts({}, { color_transparency = 0.18, context_transparency = 0.55 })
+
+            require("ibl").setup({
+                indent = {
+                    -- highlight = hl_group.char_highlight_list
+                },
+                whitespace = {
+                    -- highlight = hl_group.space_char_highlight_list,
+                    remove_blankline_trail = false
+                },
+                scope = {
+                    char = "",
+                    -- highlight = hl_group.context_highlight_list,
+                    enabled = true,
+                },
+                enabled = enabled,
+                -- Disable on dashboard
+                exclude = {
+                    filetypes = {
+                        "dashboard",
+                        "help",
+                        "terminal",
+                        "starter",
+                        "nvim-tree",
+                        "packer",
+                        "lspinfo",
+                        "TelescopePrompt",
+                        "TelescopeResults",
+                        "mason",
+                    },
+                },
+            })
+        end
     end
 }
-

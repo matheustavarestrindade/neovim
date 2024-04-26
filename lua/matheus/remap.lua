@@ -42,8 +42,8 @@ vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 vim.keymap.set("n", "<C-y>", "<cmd>Telescope neoclip<CR>");
 -- vim.keymap.set("n", "<C-s>", "<cmd>w<CR>");
 -- Move line up and Down
-vim.keymap.set("n", "<A-j>", ":m .+1<CR>==") -- move line up(n)
-vim.keymap.set("n", "<A-k>", ":m .-2<CR>==") -- move line down(n)
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==")     -- move line up(n)
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==")     -- move line down(n)
 vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv") -- move line up(v)
 vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv") -- move line down(v)
 
@@ -55,4 +55,3 @@ vim.keymap.set("n", "<C-l>", "<C-w>l")
 
 -- Open vertical split
 vim.keymap.set("n", "<leader>v", "<C-w>v")
-
