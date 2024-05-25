@@ -172,7 +172,14 @@ return {
                                     schemas = require('schemastore').json.schemas(),
                                 },
                             },
-                            capabilities = capabilities,
+                            capabilities = {
+                                textDocument = {
+                                    foldingRange = {
+                                        dynamicRegistration = false,
+                                        lineFoldingOnly = true,
+                                    },
+                                },
+                            },
                         })
                     end
                 }
