@@ -27,3 +27,6 @@ vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
+
+--Set ff to unix as default
+vim.opt.fileformat = "unix"

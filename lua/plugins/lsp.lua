@@ -56,7 +56,7 @@ return {
 
             require('mason').setup({})
             require('mason-lspconfig').setup({
-                ensure_installed = { 'tsserver', 'svelte', 'gopls', 'lua_ls', 'prismals', 'jsonls', 'yamlls' },
+                ensure_installed = { 'tsserver', 'svelte', 'gopls', 'lua_ls', 'prismals@5.15.0', 'jsonls', 'yamlls' },
                 handlers = {
                     lsp.default_setup,
                     lua_ls = function()
@@ -80,7 +80,7 @@ return {
                     end,
                     ['tsserver'] = function()
                         lsp_config.tsserver.setup({
-                            on_attach = function(client)
+                            on_attach = function(client, bufnr)
                                 client.server_capabilities.documentFormattingProvider = false
                                 client.server_capabilities.documentFormattingRangeProvider = false
                             end,
@@ -143,9 +143,6 @@ return {
                     ['prismals'] = function()
                         lsp_config.prismals.setup({
                             settings = {
-                                prisma = {
-                                    prismaFmtBinPath = ""
-                                }
                             },
                             capabilities = capabilities,
                         })
@@ -190,10 +187,10 @@ return {
             local cmp_action = require('lsp-zero').cmp_action()
 
             cmp.setup({
-                sources = {
+                sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
                     { name = 'luasnip' },
-                },
+                }, { name = "buffer" }),
                 formatting = {
                     format = lspkind.cmp_format({
                         mode = 'symbol', -- show only symbol annotations

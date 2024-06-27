@@ -49,17 +49,19 @@ return {
         lazy = false,
         priority = 1000,
         config = function()
-            local theme          = require("nightfly")
-            local colors         = theme.palette
+            require("nightfly").custom_colors({
+                bg     = "#161616",
+                violet = "#ff74b8",
+                purple = "#c693ff",
+                -- theme.palette.tan    = "#00c1bb",
+                tan    = "#ff9b42",
+            })
 
-            theme.palette.bg     = "#161616"
-            theme.palette.violet = "#ff74b8"
-            theme.palette.purple = "#c693ff"
-            -- theme.palette.tan    = "#00c1bb"
-            theme.palette.tan    = "#ff9b42"
-
+            local theme            = require("nightfly")
+            local colors           = theme.palette
 
             local custom_highlight = vim.api.nvim_create_augroup("CustomHighlight", {})
+
             vim.api.nvim_create_autocmd("ColorScheme", {
                 pattern = "nightfly",
                 callback = function()
@@ -68,7 +70,6 @@ return {
                 end,
                 group = custom_highlight,
             })
-
             theme.style()
             vim.cmd [[colorscheme nightfly]]
         end
