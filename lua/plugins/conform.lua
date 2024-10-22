@@ -12,8 +12,9 @@ return {
                 css = { "prettier" },
                 scss = { "prettier" },
                 markdown = { "prettier" },
-            }
-
+                svelte = { "prettier" },
+                prisma = { "prettier" },
+            },
         })
 
         vim.keymap.set("n", "<leader><leader>", "<cmd>Format<cr>");

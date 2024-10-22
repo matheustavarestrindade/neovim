@@ -1,7 +1,12 @@
 {
-  "Svente Typescript Component": {
+  "Svelte Typescript Component": {
     "prefix": "stsc",
     "body": ["<script lang='ts'>", "$1", "</script>"],
-    "description": "Create a Svelte component"
+    "description": "Create a Svelte Script tag"
+  },
+  "Svelte Typescript Script tag": {
+    "prefix": "script",
+    "body": ["<script lang='ts'>", "$1", "</script>"],
+    "description": "Create a Svelte Script tag"
   }
 }

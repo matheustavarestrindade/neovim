@@ -22,6 +22,15 @@ return {
         'onsails/lspkind.nvim'
     },
     {
+        'yioneko/nvim-vtsls'
+    },
+    {
+        "ray-x/lsp_signature.nvim",
+        event = "VeryLazy",
+        opts = {},
+        config = function(_, opts) require 'lsp_signature'.setup(opts) end
+    },
+    {
         'VonHeikemen/lsp-zero.nvim',
         dependencies = {
             -- Icons
@@ -46,9 +55,37 @@ return {
         config = function()
             local lsp = require("lsp-zero")
             local lsp_config = require("lspconfig")
-            local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+            local capabilities = vim.tbl_deep_extend("force", require('cmp_nvim_lsp').default_capabilities(),
+                require('lsp-file-operations').default_capabilities())
             local lspkind = require('lspkind')
 
+            -- custom function for finding the deepest root pattern
+            local lspconfig_util = require('lspconfig.util')
+            function deepest_root_pattern(patterns1, patterns2)
+                -- Create two root_pattern functions
+                local find_root1 = lspconfig_util.root_pattern(unpack(patterns1))
+                local find_root2 = lspconfig_util.root_pattern(unpack(patterns2))
+
+                return function(startpath)
+                    local path1 = find_root1(startpath)
+                    local path2 = find_root2(startpath)
+
+                    if path1 and path2 then
+                        -- Count the number of slashes to determine the path length
+                        local path1_length = select(2, path1:gsub("/", ""))
+                        local path2_length = select(2, path2:gsub("/", ""))
+
+                        if path1_length > path2_length then
+                            return path1
+                        end
+                    elseif path1 then
+                        return path1
+                    end
+
+                    return nil
+                end
+            end
 
             require('luasnip.loaders.from_vscode').lazy_load({
                 paths = './snippets/'
@@ -56,12 +93,32 @@ return {
 
             require('mason').setup({})
             require('mason-lspconfig').setup({
-                ensure_installed = { 'tsserver', 'svelte', 'gopls', 'lua_ls', 'prismals@5.15.0', 'jsonls', 'yamlls' },
+                ensure_installed = { 'ts_ls', 'svelte', 'gopls', 'lua_ls', 'prismals', 'jsonls', 'yamlls' },
                 handlers = {
                     lsp.default_setup,
                     lua_ls = function()
                         local lua_opts = lsp.nvim_lua_ls()
                         lsp_config.lua_ls.setup(lua_opts)
+                    end,
+                    ['jdtls'] = function()
+                        lsp_config.jdtls.setup({
+                            cmd = {
+                                "jdtls",
+                                "--jvm-arg=" ..
+                                string.format("-javaagent:%s", vim.fn.expand "$MASON/share/jdtls/lombok.jar"),
+                            },
+                            settings = {
+                                java = {
+                                    format = {
+                                        settings = {
+                                            url =
+                                            "https://gist.githubusercontent.com/matheustavarestrindade/1a91958791a58b35f7e2c3b3329649ea/raw/e2267c94b64ca92bc184db5ca316cbeb5fa42eba/VSCode%2520config",
+                                        },
+                                    }
+                                }
+                            },
+                            capabilities = capabilities,
+                        })
                     end,
                     ['gopls'] = function()
                         lsp_config.gopls.setup({
@@ -78,43 +135,58 @@ return {
                             capabilities = capabilities,
                         })
                     end,
-                    ['tsserver'] = function()
-                        lsp_config.tsserver.setup({
-                            on_attach = function(client, bufnr)
-                                client.server_capabilities.documentFormattingProvider = false
-                                client.server_capabilities.documentFormattingRangeProvider = false
-                            end,
+                    ['ts_ls'] = function()
+                        lsp_config.vtsls.setup({
                             settings = {
-                                completions = {
-                                    completeFunctionCalls = true,
-                                },
-                                javascript = {
-                                    inlayHints = {
-                                        includeInlayEnumMemberValueHints = true,
-                                        includeInlayFunctionLikeReturnTypeHints = true,
-                                        includeInlayFunctionParameterTypeHints = true,
-                                        includeInlayParameterNameHints = 'all',
-                                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                                        includeInlayPropertyDeclarationTypeHints = true,
-                                        includeInlayVariableTypeHints = true,
-                                        includeInlayVariableTypeHintsWhenTypeMatchesName = true
-                                    }
-                                },
                                 typescript = {
                                     inlayHints = {
-                                        includeInlayEnumMemberValueHints = true,
-                                        includeInlayFunctionLikeReturnTypeHints = true,
-                                        includeInlayFunctionParameterTypeHints = true,
-                                        includeInlayParameterNameHints = 'all',
-                                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                                        includeInlayPropertyDeclarationTypeHints = true,
-                                        includeInlayVariableTypeHints = true,
-                                        includeInlayVariableTypeHintsWhenTypeMatchesName = true
+                                        parameterNames = { enabled = "literals" },
+                                        parameterTypes = { enabled = true },
+                                        variableTypes = { enabled = true },
+                                        propertyDeclarationTypes = { enabled = true },
+                                        functionLikeReturnTypes = { enabled = true },
+                                        enumMemberValues = { enabled = true },
                                     }
-                                }
+                                },
                             },
                             capabilities = capabilities,
                         })
+                        -- lsp_config.tsserver.setup({
+                        --     on_attach = function(client, bufnr)
+                        --         client.server_capabilities.documentFormattingProvider = false
+                        --         client.server_capabilities.documentFormattingRangeProvider = false
+                        --     end,
+                        --     settings = {
+                        --         completions = {
+                        --             completeFunctionCalls = true,
+                        --         },
+                        --         javascript = {
+                        --             inlayHints = {
+                        --                 includeInlayEnumMemberValueHints = true,
+                        --                 includeInlayFunctionLikeReturnTypeHints = true,
+                        --                 includeInlayFunctionParameterTypeHints = true,
+                        --                 includeInlayParameterNameHints = 'all',
+                        --                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                        --                 includeInlayPropertyDeclarationTypeHints = true,
+                        --                 includeInlayVariableTypeHints = true,
+                        --                 includeInlayVariableTypeHintsWhenTypeMatchesName = true
+                        --             }
+                        --         },
+                        --         typescript = {
+                        --             inlayHints = {
+                        --                 includeInlayEnumMemberValueHints = true,
+                        --                 includeInlayFunctionLikeReturnTypeHints = true,
+                        --                 includeInlayFunctionParameterTypeHints = true,
+                        --                 includeInlayParameterNameHints = 'all',
+                        --                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                        --                 includeInlayPropertyDeclarationTypeHints = true,
+                        --                 includeInlayVariableTypeHints = true,
+                        --                 includeInlayVariableTypeHintsWhenTypeMatchesName = true
+                        --             }
+                        --         }
+                        --     },
+                        --     capabilities = capabilities,
+                        -- })
                     end,
                     ['svelte'] = function()
                         lsp_config.svelte.setup({
@@ -142,8 +214,6 @@ return {
                     end,
                     ['prismals'] = function()
                         lsp_config.prismals.setup({
-                            settings = {
-                            },
                             capabilities = capabilities,
                         })
                     end,
@@ -177,6 +247,20 @@ return {
                                     },
                                 },
                             },
+                        })
+                    end,
+                    ['pylsp'] = function()
+                        lsp_config.pylsp.setup({
+                            capabilities = capabilities,
+                            settings     = {
+                                pylsp = {
+                                    plugins = {
+                                        pycodestyle = {
+                                            maxLineLength = 180,
+                                        }
+                                    }
+                                }
+                            }
                         })
                     end
                 }
@@ -231,7 +315,8 @@ return {
                 vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
                 vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
                 vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-                vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+                vim.keymap.set("i", "<C-k>", function() vim.lsp.buf.signature_help() end, opts)
+                vim.keymap.set("n", "<C-k>", function() vim.lsp.buf.signature_help() end, opts)
                 lsp.default_keymaps({ buffer = bufnr })
             end)
 
