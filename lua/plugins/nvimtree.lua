@@ -110,6 +110,10 @@ return {
             on_attach = function(bufnr)
                 local api = require('nvim-tree.api')
 
+                local function opts(desc)
+                    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+                end
+
                 local function trash_put()
                     local node = require("nvim-tree.api").tree.get_node_under_cursor()
                     local function trash_impl(on_exit, on_stderr)
@@ -155,9 +159,6 @@ return {
                     vim.keymap.set("n", "d", vim.fn.has('win32') > 0 and trash_put or api.fs.trash, opts("Trash Put"))
                 end
 
-                local function opts(desc)
-                    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-                end
 
                 -- Default mappings. Feel free to modify or remove as you wish.
                 --
