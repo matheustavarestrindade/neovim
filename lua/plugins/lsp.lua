@@ -276,8 +276,9 @@ return {
                 mapping = cmp.mapping.preset.insert({
                     ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
                     ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-                    ['<C-j>'] = cmp.mapping.scroll_docs(-4),
-                    ['<C-k>'] = cmp.mapping.scroll_docs(4),
+                    -- Disable as the buffer switch keybinds is more useful
+                    -- ['<C-j>'] = cmp.mapping.scroll_docs(-4),
+                    -- ['<C-k>'] = cmp.mapping.scroll_docs(4),
                     ['<CR>'] = cmp.mapping.confirm({ select = true }),
                     -- ['<Tab>'] = cmp.mapping.confirm({ select = true }),
                     ['<C-s>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),

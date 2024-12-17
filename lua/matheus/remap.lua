@@ -20,6 +20,7 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- This is going to get me cancelled
 vim.keymap.set("i", "<C-c>", "<Esc>")
+vim.keymap.set("i", "<C-C>", "<Esc>")
 
 -- Disable arrow keys in normal mode for learning purposes
 vim.keymap.set("n", "<Left>", "<nop>")
