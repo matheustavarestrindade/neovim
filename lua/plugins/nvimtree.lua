@@ -228,5 +228,38 @@ return {
                 vim.keymap.set("n", "H", api.tree.collapse_all, opts("Collapse All"))
             end
         })
+
+        local api = require("nvim-tree.api")
+        local Event = api.events.Event
+
+        api.events.subscribe(Event.FileCreated, function(data)
+            if data.fname:match("%.java$") then
+                local file_path = data.fname
+                local package_path = file_path:match("src[\\/]main[\\/]java[\\/](.*)[\\/][^\\/]+%.java$")
+
+                if package_path then
+                    -- Convert path to Java package format
+                    local package_name = package_path:gsub("[\\/]", ".")
+
+                    -- Extract class name from filename
+                    local class_name = file_path:match("([^\\/]+)%.java$")
+
+                    -- Java file template
+                    local java_template = string.format([[
+package %s;
+
+public class %s {
+}
+]], package_name, class_name, class_name, class_name)
+
+                    -- Write the template to the file
+                    local file = io.open(file_path, "w")
+                    if file then
+                        file:write(java_template)
+                        file:close()
+                    end
+                end
+            end
+        end)
     end
 }

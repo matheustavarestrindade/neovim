@@ -4,6 +4,37 @@ return {
     config = function()
         require("typescript-tools").setup {
             settings = {
+
+                -- LSP_CONFIG
+                completions = {
+                    completeFunctionCalls = true,
+                },
+                javascript = {
+                    inlayHints = {
+                        includeInlayEnumMemberValueHints = true,
+                        includeInlayFunctionLikeReturnTypeHints = true,
+                        includeInlayFunctionParameterTypeHints = true,
+                        includeInlayParameterNameHints = 'all',
+                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                        includeInlayPropertyDeclarationTypeHints = true,
+                        includeInlayVariableTypeHints = true,
+                        includeInlayVariableTypeHintsWhenTypeMatchesName = true
+                    }
+                },
+                typescript = {
+                    inlayHints = {
+                        includeInlayEnumMemberValueHints = true,
+                        includeInlayFunctionLikeReturnTypeHints = true,
+                        includeInlayFunctionParameterTypeHints = true,
+                        includeInlayParameterNameHints = 'all',
+                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                        includeInlayPropertyDeclarationTypeHints = true,
+                        includeInlayVariableTypeHints = true,
+                        includeInlayVariableTypeHintsWhenTypeMatchesName = true
+                    }
+                },
+                -- LSP_CONFIG
+
                 -- spawn additional tsserver instance to calculate diagnostics on it
                 separate_diagnostic_server = true,
                 -- "change"|"insert_leave" determine when the client asks the server about diagnostic

@@ -45,6 +45,9 @@ return {
     --     end
     -- },
     {
+        "rebelot/kanagawa.nvim"
+    },
+    {
         'bluz71/vim-nightfly-colors',
         lazy = false,
         priority = 1000,

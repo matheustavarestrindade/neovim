@@ -54,8 +54,17 @@ return {
     { 'saadparwaiz1/cmp_luasnip' },
 
     -- Snippets
-    { 'L3MON4D3/LuaSnip' },
+    {
+        'L3MON4D3/LuaSnip',
+        dependencies = {
+            'rafamadriz/friendly-snippets',
+        }
+    },
     { 'rafamadriz/friendly-snippets' },
+    {
+        "xzbdmw/colorful-menu.nvim",
+
+    },
     {
         'neovim/nvim-lspconfig',
         config = function()
@@ -63,14 +72,35 @@ return {
 
             local capabilities = vim.tbl_deep_extend("force", require('cmp_nvim_lsp').default_capabilities(),
                 require('lsp-file-operations').default_capabilities())
-            local lspkind = require('lspkind')
 
             require('luasnip.loaders.from_vscode').lazy_load({ paths = './snippets/' })
+
+            -- Clangd
+            lsp_config.clangd.setup({
+                capabilities = capabilities,
+                cmd = { "clangd" },
+                filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+                root_dir = lsp_config.util.root_pattern(
+                    '.clangd'
+                    , '.clang-tidy'
+                    , '.clang-format'
+                    , 'compile_commands.json'
+                    , 'compile_flags.txt'
+                    , 'configure.ac'
+                    , '.git'
+                ),
+                single_file_support = true,
+            })
 
             require('mason').setup({})
             require('mason-lspconfig').setup({
                 ensure_installed = { 'svelte', 'gopls', 'lua_ls', 'prismals', 'jsonls', 'yamlls' },
                 handlers = {
+                    lemminx = function()
+                        lsp_config.lemminx.setup({
+                            capabilities = capabilities,
+                        })
+                    end,
                     lua_ls = function()
                         lsp_config.lua_ls.setup({
                             settings = {
@@ -117,59 +147,6 @@ return {
                             capabilities = capabilities,
                         })
                     end,
-                    -- ['ts_ls'] = function()
-                    --     lsp_config.vtsls.setup({
-                    --         settings = {
-                    --             typescript = {
-                    --                 inlayHints = {
-                    --                     parameterNames = { enabled = "literals" },
-                    --                     parameterTypes = { enabled = true },
-                    --                     variableTypes = { enabled = true },
-                    --                     propertyDeclarationTypes = { enabled = true },
-                    --                     functionLikeReturnTypes = { enabled = true },
-                    --                     enumMemberValues = { enabled = true },
-                    --                 }
-                    --             },
-                    --         },
-                    --         capabilities = capabilities,
-                    --     })
-                    -- lsp_config.tsserver.setup({
-                    --     on_attach = function(client, bufnr)
-                    --         client.server_capabilities.documentFormattingProvider = false
-                    --         client.server_capabilities.documentFormattingRangeProvider = false
-                    --     end,
-                    --     settings = {
-                    --         completions = {
-                    --             completeFunctionCalls = true,
-                    --         },
-                    --         javascript = {
-                    --             inlayHints = {
-                    --                 includeInlayEnumMemberValueHints = true,
-                    --                 includeInlayFunctionLikeReturnTypeHints = true,
-                    --                 includeInlayFunctionParameterTypeHints = true,
-                    --                 includeInlayParameterNameHints = 'all',
-                    --                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                    --                 includeInlayPropertyDeclarationTypeHints = true,
-                    --                 includeInlayVariableTypeHints = true,
-                    --                 includeInlayVariableTypeHintsWhenTypeMatchesName = true
-                    --             }
-                    --         },
-                    --         typescript = {
-                    --             inlayHints = {
-                    --                 includeInlayEnumMemberValueHints = true,
-                    --                 includeInlayFunctionLikeReturnTypeHints = true,
-                    --                 includeInlayFunctionParameterTypeHints = true,
-                    --                 includeInlayParameterNameHints = 'all',
-                    --                 includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                    --                 includeInlayPropertyDeclarationTypeHints = true,
-                    --                 includeInlayVariableTypeHints = true,
-                    --                 includeInlayVariableTypeHintsWhenTypeMatchesName = true
-                    --             }
-                    --         }
-                    --     },
-                    --     capabilities = capabilities,
-                    -- })
-                    -- end,
                     ['svelte'] = function()
                         lsp_config.svelte.setup({
                             settings = {
@@ -250,29 +227,34 @@ return {
 
             local cmp = require('cmp')
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
-            -- local cmp_action = require('lsp-zero').cmp_action()
 
             cmp.setup({
                 sources = cmp.config.sources({
-                    { name = "copilot" },
                     { name = 'nvim_lsp' },
+                    { name = "copilot" },
                     { name = 'luasnip' },
                 }, { name = "buffer" }),
                 formatting = {
-                    format = lspkind.cmp_format({
-                        mode = 'symbol', -- show only symbol annotations
-                        maxwidth = 50,   -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-                        -- can also be a function to dynamically calculate max width such as
-                        -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
-                        ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+                    fields = { "kind", "abbr", "menu" },
 
-                        -- The function below will be called before any actual modifications from lspkind
-                        -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-                        before = function(entry, vim_item)
-                            return vim_item
+                    format = function(entry, vim_item)
+                        local kind = require("lspkind").cmp_format({
+                            mode = "symbol_text",
+                        })(entry, vim.deepcopy(vim_item))
+                        local highlights_info = require("colorful-menu").cmp_highlights(entry)
+                        -- if highlight_info==nil, which means missing ts parser, let's fallback to use default `vim_item.abbr`.
+                        -- What this plugin offers is two fields: `vim_item.abbr_hl_group` and `vim_item.abbr`.
+                        if highlights_info ~= nil then
+                            vim_item.abbr_hl_group = highlights_info.highlights
+                            vim_item.abbr = highlights_info.text
                         end
-                    })
-                }, --[[ lsp.cmp_format(), ]]
+                        local strings = vim.split(kind.kind, "%s", { trimempty = true })
+                        vim_item.kind = " " .. (strings[1] or "") .. " "
+                        vim_item.menu = ""
+
+                        return vim_item
+                    end,
+                },
                 mapping = cmp.mapping.preset.insert({
                     ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
                     ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
@@ -291,8 +273,28 @@ return {
             vim.api.nvim_create_autocmd('LspAttach', {
                 desc = 'LSP Actions',
                 callback = function(event)
+                    local client = vim.lsp.get_client_by_id(event.data.client_id)
+                    client.server_capabilities.semanticTokensProvider = nil
+
+                    local telescopeBuiltins = require('telescope.builtin')
+
                     local opts = { buffer = event.bufnr, remap = false }
-                    vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+                    vim.keymap.set("n", "gd", function()
+                        -- vim.lsp.buf.definition()
+                        telescopeBuiltins.lsp_definitions({
+                            initial_mode = 'normal',
+                            -- Disable search bar
+                            attach_mappings = function(prompt_bufnr, map)
+                                map('i', '<CR>', function()
+                                    local content = require('telescope.actions.state').get_selected_entry(prompt_bufnr)
+                                    require('telescope.actions').close(prompt_bufnr)
+                                    vim.lsp.buf.definition(content)
+                                end)
+                                return true
+                            end,
+
+                        })
+                    end, opts)
                     vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
                     vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
                     vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
@@ -317,17 +319,17 @@ return {
                 },
             })
 
-            local function on_attach(on_attach)
+            local function on_attach(oa)
                 vim.api.nvim_create_autocmd("LspAttach", {
                     callback = function(args)
                         local buffer = args.buf
                         local client = vim.lsp.get_client_by_id(args.data.client_id)
-                        on_attach(client, buffer)
+                        oa(client, buffer)
                     end,
                 })
             end
 
-            on_attach(function(client, bufnr)
+            on_attach(function(client)
                 vim.api.nvim_create_autocmd("BufWritePost", {
                     pattern = { "*.js", "*.ts" },
                     group = vim.api.nvim_create_augroup("svelte_ondidchangetsorjsfile", { clear = true }),
