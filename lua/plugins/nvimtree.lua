@@ -280,14 +280,14 @@ return {
             require("oil").setup({
                 keymaps = {
                     ["g?"] = { "actions.show_help", mode = "n" },
-                    ["l"] = "actions.select",
+                    ["<C-l>"] = "actions.select",
                     ["<C-s>"] = { "actions.select", opts = { vertical = true } },
                     ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
                     ["<C-t>"] = { "actions.select", opts = { tab = true } },
                     ["<C-p>"] = "actions.preview",
                     ["<C-c>"] = { "actions.close", mode = "n" },
                     ["q"] = { "actions.close", mode = "n" },
-                    ["<C-l>"] = "actions.refresh",
+                    ["<C-r>"] = "actions.refresh",
                     ["<C-k>"] = { "actions.parent", mode = "n" },
                     ["_"] = { "actions.open_cwd", mode = "n" },
                     ["`"] = { "actions.cd", mode = "n" },
