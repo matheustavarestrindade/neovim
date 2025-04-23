@@ -6,8 +6,12 @@ return {
         local builtin = require('telescope.builtin')
         vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
         vim.keymap.set('n', '<C-p>', builtin.git_files, {})
+
         vim.keymap.set('n', '<leader>ps', function()
-            builtin.grep_string({ search = vim.fn.input("Grep > ") })
+            local ok, input = pcall(vim.fn.input, "Grep > ")
+            if ok and input ~= "" then
+                require('telescope.builtin').grep_string({ search = input })
+            end
         end)
         vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
 
@@ -20,6 +24,8 @@ return {
         require("telescope").setup({
             defaults = {
                 file_ignore_patterns = {
+                    -- Ignore target for java projects
+                    "target",
                     "node_modules",
                     "build",
                     "%.svelte-kit",
