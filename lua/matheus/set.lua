@@ -14,7 +14,15 @@ vim.opt.wrap = false
 
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = "C:\\Users\\mathe\\Documents\\undodir"
+
+local is_windows = jit and jit.os == "Windows"
+
+if is_windows then
+    vim.opt.undodir = "C:\\Users\\mathe\\Documents\\undodir"
+else
+    vim.opt.undodir = "~/.undodir"
+end
+
 vim.opt.undofile = true
 
 vim.opt.hlsearch = false
