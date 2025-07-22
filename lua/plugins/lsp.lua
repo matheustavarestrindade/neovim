@@ -75,22 +75,26 @@ return {
 
             require('luasnip.loaders.from_vscode').lazy_load({ paths = './snippets/' })
 
+
             -- Clangd
-            lsp_config.clangd.setup({
+            -- lsp_config.clangd.setup({
+            --     capabilities = capabilities,
+            --     cmd = { "clangd", "--log=verbose", "--background-index", "--suggest-missing-includes" },
+            --     -- cmd = { "clangd" },
+            --     filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+            --     single_file_support = true,
+            -- })
+            --
+            --
+            lsp_config.ccls.setup({
                 capabilities = capabilities,
-                cmd = { "clangd" },
-                filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
-                root_dir = lsp_config.util.root_pattern(
-                    '.clangd'
-                    , '.clang-tidy'
-                    , '.clang-format'
-                    , 'compile_commands.json'
-                    , 'compile_flags.txt'
-                    , 'configure.ac'
-                    , '.git'
-                ),
-                single_file_support = true,
+                -- Set tabstop to 4 spaces for ccls
+                init_options = {
+                    tabstop = 4,
+                    shiftwidth = 4,
+                },
             })
+
 
             require('mason').setup({})
             require('mason-lspconfig').setup({

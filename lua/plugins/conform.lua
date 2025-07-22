@@ -14,6 +14,7 @@ return {
                 markdown = { "prettier" },
                 svelte = { "prettier" },
                 prisma = { "prettier" },
+                nix = { "alejandra" },
             },
         })
 
