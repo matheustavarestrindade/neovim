@@ -1,13 +1,11 @@
 return {
     {
         'nvim-treesitter/nvim-treesitter',
-        build = function()
-            require("nvim-treesitter.install").prefer_git = true
-            local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-            ts_update()
-        end,
+        lazy = false,
+        build = ":TSUpdate",
         config = function()
-            require 'nvim-treesitter'.setup {
+            local config = require("nvim-treesitter.configs")
+            config.setup({
                 -- A list of parser names, or "all"
                 ensure_installed = { "svelte", "vimdoc", "javascript", "typescript", "c", "lua", "css", "svelte", "scss" },
 
@@ -28,7 +26,7 @@ return {
                     -- Instead of true it can also be a list of languages
                     additional_vim_regex_highlighting = false,
                 },
-            }
+            })
         end
     },
     {

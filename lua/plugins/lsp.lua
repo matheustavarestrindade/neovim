@@ -161,12 +161,14 @@ return {
                 },
             })
 
+
             -- Java
             vim.lsp.config("jdtls", {
                 cmd = {
                     "jdtls",
-                    -- "--jvm-arg=" ..
-                    -- string.format("-javaagent:%s", vim.fn.expand "$MASON/share/jdtls/lombok.jar"),
+                    "--jvm-arg=" ..
+                    string.format("-javaagent:%s",
+                        (vim.env.MASON or (vim.fn.stdpath("data") .. "/mason")) .. "/share/jdtls/lombok.jar"),
                 },
                 settings = {
                     java = {
